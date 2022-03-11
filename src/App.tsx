@@ -26,11 +26,7 @@ function App() {
   const [githubUsername, setGithubUsername] = useState("ganamavo");
   const [githubData, setGithubData] = useState([]);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
+  const { register, handleSubmit } = useForm();
 
   const fetcher = () =>
     fetch(`https://api.github.com/users/${githubUsername}/repos`).then((res) =>
