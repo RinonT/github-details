@@ -28,6 +28,28 @@
   color: #61dafb;
 }
 
+
+.list_container {
+ max-width: 768px;
+ margin: 32px auto 0 auto;
+ padding: 8px 16px 16px 16px;
+ background-color: #61b0fb25;
+ border-radius: 4px;
+}
+
+.description_container {
+  margin-bottom: 32px;
+}
+
+.owner_container {
+  display: flex;
+  justify-content: space-between;
+}
+
+span {
+  display: block;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
