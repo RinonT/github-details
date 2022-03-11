@@ -1,5 +1,7 @@
 import "./App.css";
 import useSWR from "swr";
+import { useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
 
 const RepositoriesList = (props: any) => {
   return (
@@ -21,17 +23,41 @@ const RepositoriesList = (props: any) => {
 };
 
 function App() {
+  const [githubUsername, setGithubUsername] = useState("ganamavo");
+  const [githubData, setGithubData] = useState([]);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
   const fetcher = () =>
-    fetch("https://api.github.com/users/ganamavo/repos").then((res) =>
+    fetch(`https://api.github.com/users/${githubUsername}/repos`).then((res) =>
       res.json()
     );
-  const { data, error } = useSWR("/api/user/123", fetcher);
 
-  console.log(data);
+  const { data, error } = useSWR(
+    `https://api.github.com/usersa/${githubUsername}/repos`,
+    fetcher
+  );
+
+  useEffect(() => {
+    setGithubData(data);
+  }, [data, githubUsername]);
+
+  const onSubmit = (data: any) => {
+    setGithubUsername(data.username);
+  };
 
   return (
     <div>
-      {!data && (
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <h3>Type your github username to see details</h3>
+        <input type="text" {...register("username", { required: true })} />
+        <button>See your github details</button>
+      </form>
+      {!githubData && (
         <div>
           <p>Loading...</p>
         </div>
@@ -41,8 +67,10 @@ function App() {
           <p>{error}</p>
         </div>
       )}
-      {data &&
-        data.map((repo: any) => <RepositoriesList key={repo.id} {...repo} />)}
+      {githubData &&
+        githubData.map((repo: any) => (
+          <RepositoriesList key={repo.id} {...repo} />
+        ))}
     </div>
   );
 }
