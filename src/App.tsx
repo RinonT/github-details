@@ -116,7 +116,7 @@ function App() {
             <p>{error}! Please try an existing username</p>
           </div>
         )}
-        {githubRepos.length > 0 && (
+        {githubRepos.length > 0 ? (
           <div>
             <section>
               <div>
@@ -161,6 +161,10 @@ function App() {
                 <RepositoriesList key={repo.id} {...repo} />
               ))}
             </section>
+          </div>
+        ) : (
+          <div className="error_container">
+            <p>Nothing to display</p>
           </div>
         )}
       </div>
