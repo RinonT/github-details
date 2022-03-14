@@ -50,8 +50,10 @@ function App() {
     <div>
       <form onSubmit={handleSubmit(onSubmit)}>
         <h3>Type your github username to see details</h3>
-        <input type="text" {...register("username", { required: true })} />
-        <button>See your github details</button>
+        <div>
+          <input type="text" {...register("username", { required: true })} />
+          <button>Search</button>
+        </div>
       </form>
       {!githubData && (
         <div>
