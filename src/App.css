@@ -39,12 +39,21 @@ form button:hover {
 
 
 
-.list_container {
+.list_container, .error_container {
  max-width: 768px;
  margin: 32px auto 0 auto;
  padding: 8px 16px 16px 16px;
  background-color: #61b0fb25;
  border-radius: 4px;
+}
+
+.error_container {
+  display: flex;
+  justify-content: center;
+
+  background-color: white;
+  color: red;
+
 }
 
 .description_container {

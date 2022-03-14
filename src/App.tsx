@@ -1,5 +1,4 @@
 import "./App.css";
-import useSWR from "swr";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 
@@ -24,23 +23,32 @@ const RepositoriesList = (props: any) => {
 
 function App() {
   const [githubUsername, setGithubUsername] = useState("ganamavo");
-  const [githubData, setGithubData] = useState([]);
+  const [githubRepos, setGithubRepos] = useState([]);
+  const [error, setError] = useState<unknown | string>("");
 
   const { register, handleSubmit } = useForm();
 
-  const fetcher = () =>
-    fetch(`https://api.github.com/users/${githubUsername}/repos`).then((res) =>
-      res.json()
-    );
+  const getRepos = async () => {
+    try {
+      const res = await fetch(
+        `https://api.github.com/users/${githubUsername}/repos`
+      );
+      const data = await res.json();
 
-  const { data, error } = useSWR(
-    `https://api.github.com/usersa/${githubUsername}/repos`,
-    fetcher
-  );
+      if (data.length) {
+        setGithubRepos(data);
+      } else {
+        setError(data.message);
+        setGithubRepos([]);
+      }
+    } catch (err) {
+      setError(err);
+    }
+  };
 
   useEffect(() => {
-    setGithubData(data);
-  }, [data, githubUsername]);
+    getRepos();
+  }, [githubUsername]);
 
   const onSubmit = (data: any) => {
     setGithubUsername(data.username);
@@ -58,18 +66,18 @@ function App() {
           <button>Search</button>
         </div>
       </form>
-      {!githubData && (
+      {!githubRepos && (
         <div>
           <p>Loading...</p>
         </div>
       )}
-      {error && (
-        <div>
-          <p>{error}</p>
+      {typeof error === "string" && error !== "" && (
+        <div className="error_container">
+          <p>{error}! Please try an existing username</p>
         </div>
       )}
-      {githubData &&
-        githubData.map((repo: any) => (
+      {githubRepos.length > 0 &&
+        githubRepos.map((repo: any) => (
           <RepositoriesList key={repo.id} {...repo} />
         ))}
     </div>
