@@ -2,7 +2,7 @@ h2 {
   word-break: break-word;
 }
 
-form {
+form, section {
   max-width: 768px;
   margin: 32px auto 0 auto;
 }
@@ -67,6 +67,17 @@ form button:hover {
 
 span {
   display: block;
+}
+
+
+/* User profile */
+.user_avatar_container {
+ max-width: 300px;
+}
+
+.user_avatar  {
+  width: 100%;
+  height: 100%;
 }
 
  @media(min-width: 768px) {

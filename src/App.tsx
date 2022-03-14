@@ -21,12 +21,50 @@ const RepositoriesList = (props: any) => {
   );
 };
 
+type UserProfileData = {
+  login: string;
+  avatar_url: string;
+  name: string;
+  bio: string;
+  company: string;
+  location: string;
+  blog: string;
+  public_repos: number;
+  twitter_username: string;
+};
+
+const userDefaulValue = {
+  avatar_url: "https://avatars.githubusercontent.com/u/60210091?v=4",
+  login: "ganamavo",
+  company: "Onja",
+  name: "Rinon Tendrinomena",
+  bio: "I am a professional front-end developer for Protect Our Winters UK with experience contributing to React applications using TypeScript and Next.js.",
+  location: "Mahanoro, Madagascar",
+  blog: "https://rinon.onja.org/",
+  public_repos: 61,
+  twitter_username: "Tojo_Rinon",
+};
+
 function App() {
   const [githubUsername, setGithubUsername] = useState("ganamavo");
   const [githubRepos, setGithubRepos] = useState([]);
   const [error, setError] = useState<unknown | string>("");
+  const [userProfile, setUserProfile] =
+    useState<UserProfileData>(userDefaulValue);
 
   const { register, handleSubmit } = useForm();
+
+  const getUserProfile = async () => {
+    try {
+      const res = await fetch(`https://api.github.com/users/${githubUsername}`);
+      const data = await res.json();
+      if (data.login) {
+        setUserProfile(data);
+      }
+    } catch (err) {
+      setError(err);
+    }
+  };
 
   const getRepos = async () => {
     try {
@@ -48,6 +86,7 @@ function App() {
 
   useEffect(() => {
     getRepos();
+    getUserProfile();
   }, [githubUsername]);
 
   const onSubmit = (data: any) => {
@@ -66,20 +105,65 @@ function App() {
           <button>Search</button>
         </div>
       </form>
-      {!githubRepos && (
-        <div>
-          <p>Loading...</p>
-        </div>
-      )}
-      {typeof error === "string" && error !== "" && (
-        <div className="error_container">
-          <p>{error}! Please try an existing username</p>
-        </div>
-      )}
-      {githubRepos.length > 0 &&
-        githubRepos.map((repo: any) => (
-          <RepositoriesList key={repo.id} {...repo} />
-        ))}
+      <div>
+        {!githubRepos && (
+          <div>
+            <p>Loading...</p>
+          </div>
+        )}
+        {typeof error === "string" && error !== "" && (
+          <div className="error_container">
+            <p>{error}! Please try an existing username</p>
+          </div>
+        )}
+        {githubRepos.length > 0 && (
+          <div>
+            <section>
+              <div>
+                <div className="user_avatar_container">
+                  <img
+                    className="user_avatar"
+                    src={userProfile.avatar_url}
+                    alt={`${userProfile.login}'s avatar`}
+                  />
+                </div>
+                <div className="user_info bio">
+                  <p>{userProfile.name}</p>
+                  <p>{userProfile.bio}</p>
+                </div>
+                <div className="user_ifo location">
+                  {userProfile.location && (
+                    <p>
+                      <b>Location:</b> {userProfile.location}
+                    </p>
+                  )}
+                  {userProfile.company && (
+                    <p>
+                      <b>Company:</b> {userProfile.company}
+                    </p>
+                  )}
+                </div>
+                <div className="user_info work">
+                  <p>
+                    <b>Public repos:</b> {userProfile.public_repos}
+                  </p>
+                  {userProfile.blog && (
+                    <p>
+                      <b>User website or portfolio:</b>{" "}
+                      <a href={userProfile.blog}>{userProfile.blog}</a>
+                    </p>
+                  )}
+                </div>
+              </div>
+            </section>
+            <section>
+              {githubRepos.map((repo: any) => (
+                <RepositoriesList key={repo.id} {...repo} />
+              ))}
+            </section>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
