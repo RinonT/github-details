@@ -7,25 +7,34 @@ form {
   margin: 32px auto 0 auto;
 }
 
-form div{
+form .search_container{
   display: flex;
   flex-direction: column; 
 }
 
-input {
+form .search_container div{
+  display: flex;
+  flex-direction: column; 
+}
+
+form input {
   font-size: 24px;
   padding: 16px;
   border-radius: 4px;
-  margin-bottom: 16px; 
+  margin-bottom: 16px;  
 }
 
-button {
+form button {
   padding: 16px;
   font-size: 24px;
   background-color: blue;
   color: #fff;
   border-radius: 8px;
   cursor: pointer;
+}
+
+form button:hover {
+  background-color: rgba(0, 0, 255, 0.452);
 }
 
 
@@ -52,15 +61,18 @@ span {
 }
 
  @media(min-width: 768px) {
-   form div {
+    form .search_container div{
+        width: 75%;
+    }
+
+   form .search_container {
      display: flex;
      flex-direction: row;
      justify-content: space-between;
      padding: 0;
    }
 
-   input {
-     width: 75%;
+   form .search_container input {
      margin-bottom: 0;
    }
    
