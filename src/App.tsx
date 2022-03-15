@@ -112,7 +112,7 @@ function App() {
         </p>
         <p>
           Thanks to Github that provides the APIs and to the developer that
-          spend some time building this app!
+          spent some time building this app!
         </p>
       </div>
       <SearchForm
