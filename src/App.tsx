@@ -106,9 +106,9 @@ function App() {
       <div className="app_description">
         <p>
           This is a simple application that lets us search for any Github users
-          and displys some info about them as well as their repositories, but we
-          just need to remember their Github username. The feature that allows
-          you to search by the user's real name will be released soon!
+          and displays some info about them as well as their repositories, but
+          we just need to remember their Github username. The feature that
+          allows you to search by the user's real name will be released soon!
         </p>
         <p>
           Thanks to Github that provides the APIs and to the developer that
