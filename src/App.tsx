@@ -46,7 +46,10 @@ const userDefaulValue = {
 };
 
 function App() {
-  const [githubUsername, setGithubUsername] = useState("ganamavo");
+  const username = localStorage.getItem("username");
+  const [githubUsername, setGithubUsername] = useState(
+    username ? username : "ganamavo"
+  );
   const [githubRepos, setGithubRepos] = useState([]);
   const [error, setError] = useState<unknown | string>("");
   const [userProfile, setUserProfile] =
@@ -90,13 +93,14 @@ function App() {
   }, [githubUsername]);
 
   const onSubmit = (data: any) => {
+    localStorage.setItem("username", data.username);
     setGithubUsername(data.username);
   };
 
   return (
     <div>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <h3>Type your github username to see details</h3>
+        <h3>Enter an existing github username to see details</h3>
         <div className="search_container">
           <div>
             <input type="text" {...register("username", { required: true })} />
@@ -106,11 +110,6 @@ function App() {
         </div>
       </form>
       <div>
-        {!githubRepos && (
-          <div>
-            <p>Loading...</p>
-          </div>
-        )}
         {typeof error === "string" && error !== "" && (
           <div className="error_container">
             <p>{error}! Please try an existing username</p>
@@ -119,6 +118,7 @@ function App() {
         {githubRepos.length > 0 ? (
           <div>
             <section>
+              <h2>About</h2>
               <div>
                 <div className="user_avatar_container">
                   <img
@@ -153,10 +153,23 @@ function App() {
                       <a href={userProfile.blog}>{userProfile.blog}</a>
                     </p>
                   )}
+                  {userProfile.twitter_username && (
+                    <p>
+                      <b>Twitter username:</b>{" "}
+                      <a
+                        href={`https://twitter.com/${userProfile.twitter_username}`}
+                      >
+                        {userProfile.twitter_username}
+                      </a>
+                    </p>
+                  )}
                 </div>
               </div>
             </section>
             <section>
+              <h2>
+                {userProfile.public_repos > 1 ? "Repositories" : "Repository"}
+              </h2>
               {githubRepos.map((repo: any) => (
                 <RepositoriesList key={repo.id} {...repo} />
               ))}
@@ -164,7 +177,7 @@ function App() {
           </div>
         ) : (
           <div className="error_container">
-            <p>Nothing to display</p>
+            <p>Loading...</p>
           </div>
         )}
       </div>
