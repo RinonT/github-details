@@ -11,10 +11,14 @@ export const SearchForm: React.FC<SearchFormProps> = ({
 }) => {
   return (
     <form onSubmit={handleSubmit}>
-      <h3>Enter an existing github username to see details</h3>
+      <h3>Enter an existing Github username:</h3>
       <div className="search_container">
         <div className="input_container">
-          <input type="text" {...register} />
+          <input
+            className={`search_field ${errorMessage && "show_error"}`}
+            type="text"
+            {...register}
+          />
           {errorMessage && <p className="error_message">{errorMessage} </p>}
         </div>
         <div className="button_container">

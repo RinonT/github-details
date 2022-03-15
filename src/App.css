@@ -1,10 +1,26 @@
+main {
+  max-width: 768px;
+  margin: 32px auto 0 auto;
+}
+
+h1 {
+  margin-bottom: 48px;
+  font-size: 48px;
+  font-style: italic;
+  color:#5647deb0;
+}
+
+.app_description {
+  line-height: 24px;
+  margin-bottom: 48px;
+}
+
 h2 {
   word-break: break-word;
 }
-
-form, section {
-  max-width: 768px;
-  margin: 32px auto 0 auto;
+ 
+form {
+  margin-bottom: 32px;
 }
 
 form .search_container{
@@ -22,6 +38,10 @@ form input {
   padding: 16px;
   border-radius: 4px;
   margin-bottom: 16px;  
+}
+
+.show_error {
+  border-color: red;
 }
 
 form button {
@@ -80,9 +100,11 @@ span {
 .user_info_wrapper {
   border: rgba(0, 0, 0, 0.336) solid 2px;
   border-style: dashed;
+  margin-bottom: 48px;
   padding: 16px;
   padding-top: 0;
 }
+
 .user_avatar_container {
  max-width: 300px;
 }

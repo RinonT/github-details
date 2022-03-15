@@ -101,7 +101,19 @@ function App() {
     });
 
   return (
-    <div>
+    <main>
+      <h1>FindOnGithub App</h1>
+      <div className="app_description">
+        <p>
+          This is a simple application that let you search for any Github users
+          but you just need to remember their Github username. The feature that
+          allows you to search by the user's real name will be released soon!
+        </p>
+        <p>
+          Thanks to Github that provides the APIs and to the developer that
+          spend some time building this app!
+        </p>
+      </div>
       <SearchForm
         handleSubmit={handleSubmit(onSubmit)}
         register={register("username", { required: true })}
@@ -120,6 +132,7 @@ function App() {
             </section>
             <section>
               <h2>
+                Available{" "}
                 {userProfile.public_repos > 1 ? "Repositories" : "Repository"}
               </h2>
               {githubReposList}
@@ -143,7 +156,7 @@ function App() {
           </div>
         )}
       </div>
-    </div>
+    </main>
   );
 }
 
