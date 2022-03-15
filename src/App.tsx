@@ -1,37 +1,10 @@
 import "./App.css";
-import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
-
-const RepositoriesList = (props: any) => {
-  return (
-    <div className="list_container">
-      <h2>{props.name}</h2>
-      <div className="description_container">
-        <p>
-          {props.description ? props.description : "No description provided!"}
-        </p>
-      </div>
-      <div className="owner_container">
-        <span>
-          Owner: <a href={props.owner.html_url}>{props.owner.login}</a>
-        </span>
-        <span>Repo's visibility: {props.visibility}</span>
-      </div>
-    </div>
-  );
-};
-
-type UserProfileData = {
-  login: string;
-  avatar_url: string;
-  name: string;
-  bio: string;
-  company: string;
-  location: string;
-  blog: string;
-  public_repos: number;
-  twitter_username: string;
-};
+import { useForm } from "react-hook-form";
+import { RepositoriesList } from "./components/RepositoryList";
+import { SearchForm } from "./components/SearchForm";
+import { UserInfo } from "./components/UserInfo";
+import { UserProfileData as UserProfileProps } from "./components/UserInfo";
 
 const userDefaulValue = {
   avatar_url: "https://avatars.githubusercontent.com/u/60210091?v=4",
@@ -53,9 +26,8 @@ function App() {
   const [githubRepos, setGithubRepos] = useState([]);
   const [error, setError] = useState<unknown | string>("");
   const [userProfile, setUserProfile] =
-    useState<UserProfileData>(userDefaulValue);
-
-  const { register, handleSubmit } = useForm();
+    useState<UserProfileProps>(userDefaulValue);
+  const { register, handleSubmit } = useForm<{ username: string }>();
 
   const getUserProfile = async () => {
     try {
@@ -92,23 +64,17 @@ function App() {
     getUserProfile();
   }, [githubUsername]);
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: { username: string }) => {
     localStorage.setItem("username", data.username);
     setGithubUsername(data.username);
   };
 
   return (
     <div>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <h3>Enter an existing github username to see details</h3>
-        <div className="search_container">
-          <div>
-            <input type="text" {...register("username", { required: true })} />
-            <span> </span>
-          </div>
-          <button>Search</button>
-        </div>
-      </form>
+      <SearchForm
+        handleSubmit={handleSubmit(onSubmit)}
+        register={register("username", { required: true })}
+      />
       <div>
         {typeof error === "string" && error !== "" && (
           <div className="error_container">
@@ -118,53 +84,7 @@ function App() {
         {githubRepos.length > 0 ? (
           <div>
             <section>
-              <h2>About</h2>
-              <div>
-                <div className="user_avatar_container">
-                  <img
-                    className="user_avatar"
-                    src={userProfile.avatar_url}
-                    alt={`${userProfile.login}'s avatar`}
-                  />
-                </div>
-                <div className="user_info bio">
-                  <p>{userProfile.name}</p>
-                  <p>{userProfile.bio}</p>
-                </div>
-                <div className="user_ifo location">
-                  {userProfile.location && (
-                    <p>
-                      <b>Location:</b> {userProfile.location}
-                    </p>
-                  )}
-                  {userProfile.company && (
-                    <p>
-                      <b>Company:</b> {userProfile.company}
-                    </p>
-                  )}
-                </div>
-                <div className="user_info work">
-                  <p>
-                    <b>Public repos:</b> {userProfile.public_repos}
-                  </p>
-                  {userProfile.blog && (
-                    <p>
-                      <b>User website or portfolio:</b>{" "}
-                      <a href={userProfile.blog}>{userProfile.blog}</a>
-                    </p>
-                  )}
-                  {userProfile.twitter_username && (
-                    <p>
-                      <b>Twitter username:</b>{" "}
-                      <a
-                        href={`https://twitter.com/${userProfile.twitter_username}`}
-                      >
-                        {userProfile.twitter_username}
-                      </a>
-                    </p>
-                  )}
-                </div>
-              </div>
+              <UserInfo userProfile={userProfile} />
             </section>
             <section>
               <h2>
