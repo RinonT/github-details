@@ -1,6 +1,8 @@
 import "./App.css";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import ReactPaginate from "react-paginate";
+import nextId from "react-id-generator";
 import { RepositoriesList } from "./components/RepositoryList";
 import { SearchForm } from "./components/SearchForm";
 import { UserInfo } from "./components/UserInfo";
@@ -27,7 +29,17 @@ function App() {
   const [error, setError] = useState<unknown | string>("");
   const [userProfile, setUserProfile] =
     useState<UserProfileProps>(userDefaulValue);
-  const { register, handleSubmit } = useForm<{ username: string }>();
+
+  // For the pagination
+  const [offset, setOffset] = useState(0);
+  const [pageCount, setPageCount] = useState(0);
+  const [perPage] = useState(5);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<{ username: string }>();
 
   const getUserProfile = async () => {
     try {
@@ -69,11 +81,31 @@ function App() {
     setGithubUsername(data.username);
   };
 
+  // Code for the pagination
+  useEffect(() => {
+    githubRepos.length > 0 &&
+      setPageCount(Math.ceil(githubRepos.length / perPage));
+  }, [githubRepos]);
+
+  const handlePageClick: (selectedItem: { selected: number }) => void = (
+    item
+  ) => {
+    const selectedPage = item.selected;
+    setOffset(selectedPage + 1);
+  };
+
+  const githubReposList =
+    githubRepos &&
+    githubRepos.slice(offset, offset + perPage).map((repo) => {
+      return <RepositoriesList key={nextId()} {...repo} />;
+    });
+
   return (
     <div>
       <SearchForm
         handleSubmit={handleSubmit(onSubmit)}
         register={register("username", { required: true })}
+        errorMessage={errors.username ? "This field is required" : ""}
       />
       <div>
         {typeof error === "string" && error !== "" && (
@@ -90,9 +122,19 @@ function App() {
               <h2>
                 {userProfile.public_repos > 1 ? "Repositories" : "Repository"}
               </h2>
-              {githubRepos.map((repo: any) => (
-                <RepositoriesList key={repo.id} {...repo} />
-              ))}
+              {githubReposList}
+              <ReactPaginate
+                previousLabel={"<"}
+                nextLabel={">"}
+                breakLabel={"..."}
+                breakClassName={"break-me"}
+                pageCount={pageCount}
+                marginPagesDisplayed={1}
+                pageRangeDisplayed={2}
+                onPageChange={handlePageClick}
+                containerClassName={"pagination"}
+                activeClassName={"active"}
+              />
             </section>
           </div>
         ) : (
